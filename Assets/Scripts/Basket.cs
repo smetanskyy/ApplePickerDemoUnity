@@ -2,15 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Basket : MonoBehaviour
 {
+    [Header("Set Dynamically")]
+    public Text scoreGT;
     public float panSpeed = 20f;
     Vector3 lastMouseCoordinate = Vector3.zero;
+
+    //Відстань на яку повинно змінюватися напрямок руху яблуні
+    public float leftAndRightEnge = 25f;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject scoreGO = GameObject.Find("ScoreCounter");
+        // Получить компонент Text этого игрового объекта
+        scoreGT = scoreGO.GetComponent<Text>();
+        // Установить начальное число очков равным 0
+        scoreGT.text = "0";
     }
 
     // Update is called once per frame
@@ -61,6 +72,11 @@ public class Basket : MonoBehaviour
             SceneManager.LoadScene(1);
         }
 
+        if (pos.x < -leftAndRightEnge || pos.x > leftAndRightEnge)
+        {
+            pos = this.transform.position;
+        }
+
         this.transform.position = pos;
     }
 
@@ -73,6 +89,14 @@ public class Basket : MonoBehaviour
         if (collidedWidth.tag == "Apple")
         {
             Destroy(collidedWidth); //Якщо облуко то видаємо його
+            
+            // Преобразовать текст в scoreGT в целое число
+            int score = int.Parse(scoreGT.text);
+            
+            // Добавить очки за пойманное яблоко
+            score += 100;
+            // Преобразовать число очков обратно в строку и вывести ее на экран
+            scoreGT.text = score.ToString();
         }
     }
 }

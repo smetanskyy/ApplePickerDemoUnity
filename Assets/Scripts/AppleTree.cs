@@ -1,26 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class AppleTree : MonoBehaviour
 {
     [Header("Set in Inspector")]
+
+    public Text scoreGT;
+    public bool upLevel = false;
+
     //Шаблон для створення яблука
     public GameObject applePrefab;
+
+    //Шаблон для створення bomb
+    public GameObject bombPrefab;
+    
     //Швидкість руху яблуні
-    public float speed = 1f;
+    public float speed = 10f;
 
     //Відстань на яку повинно змінюватися напрямок руху яблуні
-    public float leftAndRightEnge = 10f;
+    public float leftAndRightEnge = 25f;
 
     //Імовірність случайної зміни напряку руху
-    public float changeToChangeDirections = 0.1f;
+    public float changeToChangeDirections = 0.05f;
 
     //Частота створення екземплярів яблук
-    public float secondsBetweenAppleDrops = 1f;
+    public float secondsBetweenAppleDrops = 0.6f;
     // Start is called before the first frame update
     void Start()
     {
+        GameObject scoreGO = GameObject.Find("ScoreCounter");
+        // Получить компонент Text этого игрового объекта
+        scoreGT = scoreGO.GetComponent<Text>();
         //Скидання яблука раз в секунду
         Invoke("DropApple", 2f);
     }
@@ -32,9 +44,24 @@ public class AppleTree : MonoBehaviour
         Invoke("DropApple", secondsBetweenAppleDrops);  //кожну секунду буде скидатися нове яблуко
     }
 
+    void DropBomb()
+    {
+        GameObject bomb = Instantiate<GameObject>(bombPrefab);
+        bomb.transform.position = transform.position; //позиція яблука рівна позиції яблуні
+        Invoke("DropBomb", secondsBetweenAppleDrops);  //кожну секунду буде скидатися нове яблуко
+    }
+
     // Update is called once per frame
     void Update()
     {
+        // Преобразовать текст в scoreGT в целое число
+        int score = int.Parse(scoreGT.text);
+        if (score > 2000 && !upLevel)
+        {
+            CancelInvoke("DropApple");
+            Invoke("DropBomb", 2f);
+            upLevel = true;
+        }
         //Просте переміщення
         Vector3 pos = transform.position;
         var deltaTime = Time.deltaTime;
