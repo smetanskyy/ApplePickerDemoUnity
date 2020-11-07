@@ -21,7 +21,7 @@ public class MenuButton : MonoBehaviour
 				if (menuButtonController.index == 2)
 					Application.Quit();
 				else
-					SceneManager.LoadScene(0);
+					SceneManager.LoadScene(1);
 			}
 			else if (animator.GetBool ("pressed")){
 				animator.SetBool ("pressed", false);

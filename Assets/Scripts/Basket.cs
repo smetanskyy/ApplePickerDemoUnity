@@ -69,7 +69,7 @@ public class Basket : MonoBehaviour
 
         if (Input.GetKey("escape"))
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
 
         if (pos.x < -leftAndRightEnge || pos.x > leftAndRightEnge)
